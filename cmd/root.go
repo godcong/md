@@ -5,11 +5,11 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
+
+	"github.com/godcong/md/internal/configs"
 )
 
 var (
-	cfgFile string
 	rootCmd = &cobra.Command{
 		Use:   "md",
 		Short: "Markdown files manager",
@@ -25,33 +25,6 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is .markdown.toml)")
-}
-
-func initConfig() {
-	if cfgFile != "" {
-		viper.SetConfigFile(cfgFile)
-	} else {
-		home, err := os.UserHomeDir()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		viper.AddConfigPath(home)
-		wd, err := os.Getwd()
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		viper.AddConfigPath(wd)
-		viper.SetConfigType("toml")
-		viper.SetConfigName(".markdown.yaml")
-	}
-
-	viper.AutomaticEnv()
-
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
+	cobra.OnInitialize(configs.InitConfig)
+	rootCmd.PersistentFlags().StringVar(&configs.ConfigFile, "config", "", "config file (default is .markdown.toml)")
 }
