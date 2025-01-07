@@ -66,9 +66,9 @@ func runIndex(cmd *cobra.Command, args []string) {
 		dir := filepath.Dir(relPath)
 		if parent != dir {
 			parent = dir
-			_, _ = w.WriteString(fmt.Sprintf("## %s\n", dir))
+			_, _ = w.WriteString(fmt.Sprintf("## %s\n", strings.ReplaceAll(dir, "\\", "/")))
 		}
-		_, _ = w.WriteString(fmt.Sprintf("- [%s](%s)\n", title, relPath))
+		_, _ = w.WriteString(fmt.Sprintf("- [%s](%s)\n", title, strings.ReplaceAll(relPath, "\\", "/")))
 	}
 	_ = w.Flush()
 	fmt.Printf("Index generated: %s\n", output)
